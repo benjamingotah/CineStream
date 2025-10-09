@@ -1,11 +1,16 @@
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Play, Star, Users, Award, ChevronRight, Menu, X, Film, Tv, Download, Wifi } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
+
+import { useRef } from "react"
+import MoviesInfo from "@/Dashboard/MoviesInfo"
+
 
 export default function LandingPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+
 
   const features = [
     { 
@@ -252,6 +257,36 @@ export default function LandingPage() {
                 </div>
               </div>
             </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Movie Categories Section */}
+      <section className="py-20 bg-gradient-to-b from-[#0B1C2C]/50 to-[#0F2438]/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-3xl lg:text-4xl font-bold mb-4">
+              Discover <span className="text-orange-400">Popular Movies</span>
+            </h2>
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              Explore our curated selection of movies across different categories.
+            </p>
+          </motion.div>
+
+          {/* Movie Category Sections */}
+          <div className="space-y-16">
+            
+                  {/* Left Chevron */}
+              
+          <MoviesInfo/>
+                 
+             
           </div>
         </div>
       </section>
