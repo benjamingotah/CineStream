@@ -1,12 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
-import type { Movie } from "@/hooks/Movies";
-import { fetchMoviesByCategory } from "@/hooks/Movies";
+import { getMovies } from "@/hooks/Movies";
 import MovieCard from "@/components/MovieCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const MoviesInfo = () => {
   // State for movies data for each category
+  interface Movie {
+  id: number;
+  title: string;
+  posterUrl: string;
+  rating: number;
+  releaseYear: number;
+}
   const [moviesData, setMoviesData] = useState<Record<string, Movie[]>>({
     top_rated: [],
     popular: [],
@@ -44,7 +50,7 @@ const MoviesInfo = () => {
     setLoadingStates(prev => ({ ...prev, [category]: true }));
     try {
       // Fetch movies for the specified category and page
-      const data = await fetchMoviesByCategory(category, pageNum);
+      const data = await getMovies(category, pageNum);
       
       setMoviesData(prev => ({
         ...prev,
@@ -90,7 +96,7 @@ const MoviesInfo = () => {
     const slider = sliderRefs.current[category];
     if (!slider) return;
 
-    const scrollAmount = 500; // adjust for sensitivity
+    const scrollAmount = 500;
     slider.scrollBy({
       left: direction === "left" ? -scrollAmount : scrollAmount,
       behavior: "smooth",
@@ -103,8 +109,8 @@ const MoviesInfo = () => {
   };
 
   return (
-    <div className=" max-w-[100%]">
-      <h1 className="text-2xl font-bold mb-6 text-white"></h1>
+    <div className="p-4 max-w-[100%]">
+      <h1 className="text-2xl font-bold mb-6 text-white">Movies</h1>
       
       {/* Movie sections for each category */}
       {categories.map((category) => (
@@ -140,7 +146,7 @@ const MoviesInfo = () => {
 
             {loadingStates[category.id] && (
               <div className="flex space-x-4">
-                {[...Array(5)].map((_, index) => (
+                {[...Array(6)].map((_, index) => (
                   <div key={index} className="flex-shrink-0 w-[180px] space-y-2">
                     <Skeleton className="h-[270px] w-[180px] rounded-2xl" />
                     <Skeleton className="h-4 w-[160px]" />

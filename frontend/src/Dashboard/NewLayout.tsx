@@ -21,7 +21,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from '@/components/ui/avatar'
-import { useIsMobile } from '@/hooks/use-mobile';
+import { useIsMobileOrTablet } from '@/hooks/use-mobile';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { motion } from "framer-motion";
 
@@ -35,7 +35,7 @@ const DATA = {
 };
 
 const NewLayout = () => {
-  const isMobile = useIsMobile();
+  const isMobileOrTablet = useIsMobileOrTablet();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -68,8 +68,8 @@ const NewLayout = () => {
 
   return (
     <div className="flex h-screen bg-[#0F161F]">
-      {/* Mobile sidebar overlay */}
-      {isMobile && sidebarOpen && (
+      {/* Mobile/Tablet sidebar overlay */}
+      {isMobileOrTablet && sidebarOpen && (
         <div 
           className="fixed inset-0 bg-black/50 z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
@@ -79,10 +79,10 @@ const NewLayout = () => {
       {/* Sidebar */}
       <aside 
         className={`
-          fixed md:static inset-y-0 left-0 z-50 w-64 bg-[#0A1D37] text-white
+          fixed lg:static inset-y-0 left-0 z-50 w-64 bg-[#0A1D37] text-white
           transform transition-transform duration-300 ease-in-out
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-          md:translate-x-0 md:z-auto
+          lg:translate-x-0 lg:z-auto
         `}
       >
         <div className="flex flex-col h-full">
@@ -94,10 +94,10 @@ const NewLayout = () => {
               </div>
               <span className="text-xl font-bold">CineStream</span>
             </div>
-            {(isMobile || !sidebarOpen) && (
+            {(isMobileOrTablet || !sidebarOpen) && (
               <button 
                 onClick={() => setSidebarOpen(false)}
-                className="p-1 rounded-md hover:bg-gray-700 md:hidden"
+                className="p-1 rounded-md hover:bg-gray-700 lg:hidden"
               >
                 <X className="h-6 w-6" />
               </button>
@@ -112,7 +112,7 @@ const NewLayout = () => {
                   key={index}
                   to={item.path}
                   className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition-colors"
-                  onClick={() => isMobile && setSidebarOpen(false)}
+                  onClick={() => isMobileOrTablet && setSidebarOpen(false)}
                 >
                   <item.icon className="h-5 w-5" />
                   <span>{item.label}</span>
@@ -161,20 +161,20 @@ const NewLayout = () => {
       {/* Main content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <header className="bg-[#0A1D37] text-gray-100 border-b border-gray-700 flex h-16 shrink-0 items-center gap-2 fixed top-0 left-0 right-0 z-30 md:left-64">
+        <header className="bg-[#0A1D37] text-gray-100 border-b border-gray-700 flex h-16 shrink-0 items-center gap-2 fixed top-0 left-0 right-0 z-30 lg:left-64">
           <div className="flex items-center gap-2 w-full px-4">
-            {/* Mobile menu button */}
+            {/* Mobile/Tablet menu button */}
             <button
               onClick={() => setSidebarOpen(true)}
-              className="p-1 rounded-md hover:bg-gray-700 md:hidden"
+              className="p-1 rounded-md hover:bg-gray-700 lg:hidden"
             >
               <Menu className="h-6 w-6" />
             </button>
             
-            <Separator orientation="vertical" className="h-6 md:hidden" />
+            <Separator orientation="vertical" className="h-6 lg:hidden" />
 
             <div className='flex justify-between items-center w-full'>
-              {isMobile ? (
+              {isMobileOrTablet ? (
                 <motion.div
                   initial={{ width: "2rem" }}
                   animate={isSearchFocused ? { width: "80%" } : { width: "3rem" }}
@@ -235,7 +235,7 @@ const NewLayout = () => {
               
               <div className="flex items-center gap-2 ml-auto">
                 {/* User info with truncated name in avatar for small screens */}
-                <div className="hidden md:flex items-center gap-2">
+                <div className="hidden lg:flex items-center gap-2">
                   <span className="text-sm font-medium truncate max-w-[120px]">
                     {DATA.user.name}
                   </span>
@@ -255,7 +255,7 @@ const NewLayout = () => {
                         </AvatarFallback>
                       </Avatar>
                     </TooltipTrigger>
-                    <TooltipContent side="bottom" className="md:hidden">
+                    <TooltipContent side="bottom" className="lg:hidden">
                       <p>{DATA.user.name}</p>
                     </TooltipContent>
                   </Tooltip>
@@ -266,7 +266,7 @@ const NewLayout = () => {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto pt-16 mt-6 pb-6 px-4 md:px-6 md:left-64">
+        <main className="flex-1 overflow-y-auto pt-16 pb-6  lg:left-64">
           <Outlet />
         </main>
       </div>

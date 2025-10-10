@@ -8,6 +8,7 @@ import MoviesInfo from "@/Dashboard/MoviesInfo"
 import LiveStreams from "@/Dashboard/LiveStreams"
 import Playlist from "@/Dashboard/Playlist"
 import Subscriptions from "@/Dashboard/Subscriptions"
+import MovieDetailsPage from "./Dashboard/MovieDetailsPage"
 
 const App = () => {
   return (
@@ -18,12 +19,16 @@ const App = () => {
           <Route path="/home" element={<Navigate to="/" replace />} />
           <Route path="/auth/signup" element={<SignUp />} />
           <Route path="/auth/login" element={<Login />} />
+          <Route path="/movie/:id" element={<MovieDetailsPage />} />
+
+        
           <Route path="/movie-app/*" element={<NewLayout />}>
             <Route index element={<Navigate to="movies" replace />} />
             <Route path=":category" element={<MoviesInfo />}/>
             <Route path="live-streams" element={<LiveStreams />}/>
             <Route path="playlist" element={<Playlist />}/>
             <Route path="subscriptions" element={<Subscriptions />}/>
+            <Route path="movie/:id" element={<MovieDetailsPage />} />
           </Route>
         </Routes>
       </BrowserRouter>
