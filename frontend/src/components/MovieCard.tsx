@@ -14,7 +14,7 @@ const location = useLocation()
 
   return (
     <Link to={movieLink}>
-    <div className="flex-shrink-0 w-[180px] scroll-snap-align-start">
+    <div className="flex-shrink-0 w-[180px] md:w-[190px] scroll-snap-align-start mb-5">
       <img
         src={movie.posterUrl}
         alt={movie.title}
