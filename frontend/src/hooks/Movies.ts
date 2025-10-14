@@ -79,3 +79,20 @@ export async function getSimilarMovies(movieId:number){
     throw error
   }
 }
+
+
+// Search for movies
+
+export async function searchMovies(keyword:string, page: number){
+  try{
+    const response = await fetch(`${BaseUrl}/movie-info/search?keyword=${keyword}&page=${page}`)
+
+    if(!response.ok) throw new Error(`HTTP error Status: ${response.status}`)
+      const data = await response.json()
+    return data
+
+  }catch(error){
+    console.error(`Error fetching movie details: `, error)
+    throw error
+  }
+}

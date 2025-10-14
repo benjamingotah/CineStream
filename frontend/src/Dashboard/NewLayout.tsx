@@ -1,7 +1,5 @@
 import { Link, Outlet } from "react-router-dom";
-import { useState, useRef } from 'react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { useState } from 'react';
 import { Separator } from '@/components/ui/separator';
 import {
   ChevronUp,
@@ -9,7 +7,6 @@ import {
   LogOut,
   Plus,
   Radio,
-  Search,
   TvMinimal,
   User2,
   Wallet,
@@ -23,7 +20,7 @@ import {
 } from '@/components/ui/avatar'
 import { useIsMobileOrTablet } from '@/hooks/use-mobile';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import { motion } from "framer-motion";
+import SearchBar from "./Search/SearchBar";
 
 const DATA = {
   user: {
@@ -37,27 +34,7 @@ const DATA = {
 const NewLayout = () => {
   const isMobileOrTablet = useIsMobileOrTablet();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [isSearchFocused, setIsSearchFocused] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const searchInputRef = useRef<HTMLInputElement>(null);
 
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle search submission here
-    console.log('Searching for:', searchQuery);
-    // You can add your search logic here
-  };
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-  };
-
-  const clearSearch = () => {
-    setSearchQuery('');
-    if (searchInputRef.current) {
-      searchInputRef.current.focus();
-    }
-  };
 
   const navItems = [
     { icon: TvMinimal, label: 'Movies', path: '/movie-app/movies' },
@@ -172,66 +149,10 @@ const NewLayout = () => {
             </button>
             
             <Separator orientation="vertical" className="h-6 lg:hidden" />
-
+            
+            {/* search */}
             <div className='flex justify-between items-center w-full'>
-              {isMobileOrTablet ? (
-                <motion.div
-                  initial={{ width: "2rem" }}
-                  animate={isSearchFocused ? { width: "80%" } : { width: "3rem" }}
-                  transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                  className="flex-1 max-w-md"
-                  onFocus={() => setIsSearchFocused(true)}
-                  onBlur={() => setIsSearchFocused(false)}
-                >
-                  <form onSubmit={handleSearchSubmit} className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-800 w-4 h-4" />
-                    <Input
-                      ref={searchInputRef}
-                      className="bg-white rounded-2xl p-2 max-w-[85%] md:min-w-100 pl-10 text-[#0A1D37]"
-                      type="search"
-                      placeholder="Search movies..."
-                      value={searchQuery}
-                      onChange={handleSearchChange}
-                      onFocus={() => setIsSearchFocused(true)}
-                      onBlur={() => setIsSearchFocused(false)}
-                    />
-                    {searchQuery && (
-                      <Button 
-                        type="submit"
-                        size="icon"
-                        variant="ghost"
-                        className="absolute right-1 top-1/2 transform -translate-y-1/2 h-6 w-6 rounded-full bg-orange-500 hover:bg-orange-600 text-white"
-                      >
-                        <Search className="h-3 w-3" />
-                      </Button>
-                    )}
-                  </form>
-                </motion.div>
-              ) : (
-                <div className="flex-1 max-w-md">
-                  <form onSubmit={handleSearchSubmit} className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-800 w-4 h-4" />
-                    <Input
-                      ref={searchInputRef}
-                      className='bg-white rounded-2xl p-2 min-w-40 md:min-w-100 pl-10 text-[#0A1D37]'
-                      type="search"
-                      placeholder='Search movies, shows...'
-                      value={searchQuery}
-                      onChange={handleSearchChange}
-                    />
-                    {searchQuery && (
-                      <Button 
-                        type="submit"
-                        size="icon"
-                        variant="ghost"
-                        className="absolute right-1 top-1/2 transform -translate-y-1/2 h-6 w-6 rounded-full bg-orange-500 hover:bg-orange-600 text-white"
-                      >
-                        <Search className="h-3 w-3" />
-                      </Button>
-                    )}
-                  </form>
-                </div>
-              )}
+              <SearchBar/>
               
               <div className="flex items-center gap-2 ml-auto">
                 {/* User info with truncated name in avatar for small screens */}
