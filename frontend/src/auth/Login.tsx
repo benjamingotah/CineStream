@@ -5,32 +5,43 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChevronLeftIcon, Loader2, Eye, EyeOff, Mail } from "lucide-react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import { UseAuth } from "@/hooks/useAuth"
+import type { LoginRequest } from "@/hooks/auth"
 
 const Login = () => {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const navigate = useNavigate()
+
+  const{login}=UseAuth()
+  const[credentials, setCredentials] = useState<LoginRequest>({
+    email: "",
+    password: ""
+  })
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
 
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCredentials({ ...credentials, [e.target.id]: e.target.value });
+  };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("")
 
-    if (!email || !password) {
+    if (!credentials.email || !credentials.password) {
       setError("Both fields are required.")
       return
     }
 
     // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) {
+    if (!emailRegex.test(credentials.email)) {
       setError("Please enter a valid email address.")
       return
     }
 
-    if (password.length < 6) {
+    if (credentials.password.length < 6) {
       setError("Password must be at least 6 characters.")
       return
     }
@@ -38,12 +49,15 @@ const Login = () => {
     setLoading(true)
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      console.log("Login submitted:", { email, password })
+      const response = await login(credentials)
+
+      console.log("Login submitted:", response?.user)
+
+      navigate('/movie-app/movies')
       // Here you would typically redirect the user or update app state
     } catch (err) {
       setError("Invalid email or password. Please try again.")
+      console.error(err)
     } finally {
       setLoading(false)
     }
@@ -94,8 +108,8 @@ const Login = () => {
                       id="email"
                       type="email"
                       placeholder="you@example.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      value={credentials.email}
+                      onChange={handleChange}
                       className="pl-10 
                       h-13 bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-orange-500 focus:ring-orange-500"
                       required
@@ -111,8 +125,8 @@ const Login = () => {
                       id="password"
                       type={showPassword ? "text" : "password"}
                       placeholder="••••••••"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      value={credentials.password}
+                      onChange={handleChange}
                       className="pr-10 bg-white/10 h-13
                      border-white/20 text-white placeholder:text-gray-400 focus:border-orange-500 focus:ring-orange-500"
                       required

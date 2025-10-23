@@ -6,44 +6,56 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChevronLeftIcon, Loader2, Eye, EyeOff, User, Mail } from "lucide-react"
 import { Link } from "react-router-dom"
+import { SignupUser
+
+ } from "@/hooks/auth"
+ import type { SignupRequest } from "@/hooks/auth"
 
 const SignUp = () => {
-  const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const [formData, setformData] = useState <SignupRequest>({
+    fullName: "",
+    email: "",
+    password: "",}
+  )
+  const [success, setSuccess] = useState("")
+  
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
+
+const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setformData({ ...formData, [e.target.id]: e.target.value });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("")
 
-    if (!name || !email || !password) {
+    if (!formData.fullName || !formData.email || !formData.password) {
       setError("All fields are required.")
       return
     }
 
     // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) {
+    if (!emailRegex.test(formData.email)) {
       setError("Please enter a valid email address.")
       return
     }
 
-    if (password.length < 6) {
+    if (formData.password.length < 6) {
       setError("Password must be at least 6 characters.")
       return
     }
 
     setLoading(true)
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      console.log("SignUp submitted:", { name, email, password })
-      setName("")
-      setEmail("")
-      setPassword("")
+      const res = await SignupUser(formData)
+      setSuccess(res.message)
+      setformData({ fullName: "",
+    email: "",
+    password: "",})
+
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message)
@@ -97,11 +109,11 @@ const SignUp = () => {
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                     <Input
-                      id="name"
+                      id="fullName"
                       type="text"
                       placeholder="John Doe"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
+                      value={formData.fullName}
+                      onChange={handleChange}
                       className="pl-10 bg-white/10 h-13 border-white/20 text-white placeholder:text-gray-400 focus:border-orange-500 focus:ring-orange-500"
                       required
                     />
@@ -117,8 +129,8 @@ const SignUp = () => {
                       id="email"
                       type="email"
                       placeholder="you@example.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      value={formData.email}
+                      onChange={handleChange}
                       className="pl-10 bg-white/10 h-13 border-white/20 text-white placeholder:text-gray-400 focus:border-orange-500 focus:ring-orange-500"
                       required
                     />
@@ -133,8 +145,8 @@ const SignUp = () => {
                       id="password"
                       type={showPassword ? "text" : "password"}
                       placeholder="••••••••"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      value={formData.password}
+                      onChange={handleChange}
                       className="pr-10 bg-white/10 border-white/20 text-white h-13 placeholder:text-gray-400 focus:border-orange-500 focus:ring-orange-500"
                       required
                     />
@@ -181,6 +193,13 @@ const SignUp = () => {
                   </div>
                 )}
 
+                {success && (
+                  <p className="text-green-400 bg-blue-950 border border-gray-700 rounded-xl p-3 text-center mt-4">
+                    {success}. <Link to="/auth/login" className="underline text-orange-400">Login now</Link>
+                  </p>
+                )}
+
+
                 {/* Submit */}
                 <Button
                   type="submit"
@@ -196,6 +215,7 @@ const SignUp = () => {
                     "Create Account"
                   )}
                 </Button>
+                
               </form>
 
               {/* Login Link */}

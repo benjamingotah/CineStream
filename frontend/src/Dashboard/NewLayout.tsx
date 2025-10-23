@@ -2,7 +2,6 @@ import { Link, Outlet } from "react-router-dom";
 import { useState } from 'react';
 import { Separator } from '@/components/ui/separator';
 import {
-  ChevronUp,
   CreditCard,
   LogOut,
   Plus,
@@ -22,20 +21,16 @@ import { useIsMobileOrTablet } from '@/hooks/use-mobile';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import SearchBar from "./Search/SearchBar";
 
-const DATA = {
-  user: {
-    name: 'Skyleen',
-    email: 'skyleen@example.com',
-    avatar:
-      'https://pbs.twimg.com/profile_images/1909615404789506048/MTqvRsjo_400x400.jpg',
-  }
-};
+import { UseAuth } from "@/hooks/useAuth";
+
 
 const NewLayout = () => {
+
+  const {user, logout, isAuthenticated} =UseAuth()
   const isMobileOrTablet = useIsMobileOrTablet();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-
+if(isAuthenticated){}
   const navItems = [
     { icon: TvMinimal, label: 'Movies', path: '/movie-app/movies' },
     { icon: Radio, label: 'Live Streams', path: '/movie-app/live-streams' },
@@ -102,17 +97,17 @@ const NewLayout = () => {
           <div className="p-4 border-t border-gray-700">
             <div className="flex items-center space-x-3">
               <Avatar className="rounded-2xl">
-                <AvatarImage src={DATA.user.avatar} alt={DATA.user.name} />
+                <AvatarImage src={''} alt={user?.fullName} />
                 <AvatarFallback className="rounded-2xl">
-                  {DATA.user.name.charAt(0)}
+                  {user?.fullName.charAt(0)}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">{DATA.user.name}</p>
-                <p className="text-xs text-gray-400 truncate">{DATA.user.email}</p>
+                <p className="text-sm font-medium truncate">{user?.fullName}</p>
+                <p className="text-xs text-gray-400 truncate">{user?.email}</p>
               </div>
               <button className="p-1 rounded-md hover:bg-gray-700">
-                <ChevronUp className="h-4 w-4" />
+                
               </button>
             </div>
             
@@ -126,7 +121,7 @@ const NewLayout = () => {
                 <CreditCard className="h-4 w-4" />
                 <span>Billing</span>
               </button>
-              <button className="flex items-center space-x-2 w-full px-3 py-2 rounded-md hover:bg-red-500 text-sm">
+              <button onClick={logout} className="flex items-center space-x-2 w-full px-3 py-2 rounded-md hover:bg-red-500 text-sm">
                 <LogOut className="h-4 w-4" />
                 <span>Sign out</span>
               </button>
@@ -158,7 +153,7 @@ const NewLayout = () => {
                 {/* User info with truncated name in avatar for small screens */}
                 <div className="hidden lg:flex items-center gap-2">
                   <span className="text-sm font-medium truncate max-w-[120px]">
-                    {DATA.user.name}
+                    {user?.fullName}
                   </span>
                 </div>
                 
@@ -168,16 +163,16 @@ const NewLayout = () => {
                     <TooltipTrigger asChild>
                       <Avatar className="rounded-2xl cursor-pointer">
                         <AvatarImage
-                          src={DATA.user.avatar}
-                          alt={DATA.user.name}
+                          src={''}
+                          alt={user?.fullName}
                         />
-                        <AvatarFallback className="rounded-2xl">
-                          {DATA.user.name.charAt(0)}
+                        <AvatarFallback className="rounded-2xl text-xl font-semibold text-black">
+                          {user?.fullName.charAt(0).toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
                     </TooltipTrigger>
                     <TooltipContent side="bottom" className="lg:hidden">
-                      <p>{DATA.user.name}</p>
+                      <p>{user?.fullName}</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>

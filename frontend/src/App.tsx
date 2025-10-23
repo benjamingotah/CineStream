@@ -9,6 +9,7 @@ import LiveStreams from "@/Dashboard/LiveStreams"
 import Playlist from "@/Dashboard/Playlist"
 import Subscriptions from "@/Dashboard/Subscriptions"
 import MovieDetailsPage from "./Dashboard/MovieDetailsPage"
+import { ProtectedRoute } from "./hooks/protectedRoute"
 
 const App = () => {
   return (
@@ -21,8 +22,8 @@ const App = () => {
           <Route path="/auth/login" element={<Login />} />
           <Route path="/movie/:id" element={<MovieDetailsPage />} />
 
-        
-          <Route path="/movie-app/*" element={<NewLayout />}>
+        {/* Protected Routes */}
+          <Route path="/movie-app/*" element={<ProtectedRoute><NewLayout /></ProtectedRoute>}>
             <Route index element={<Navigate to="movies" replace />} />
             <Route path=":category" element={<MoviesInfo />}/>
             <Route path="live-streams" element={<LiveStreams />}/>
