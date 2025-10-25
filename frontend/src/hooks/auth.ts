@@ -24,6 +24,10 @@ export interface LoginResponse {
     user: User
 }
 
+export interface UpdateResponse{
+    message: string
+}
+
 
 const BaseUrl = import.meta.env.VITE_BASE_URL;
 
@@ -58,6 +62,30 @@ export async function LoginUser(payload:LoginRequest): Promise<LoginResponse> {
     
         const res = await fetch(`${BaseUrl}/auth/login`, {
             method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(requestBody)
+    })
+
+    if(!res.ok) throw new Error(`${res.status}`)
+
+    const data = await res.json()
+    return data
+
+    }catch(error){
+        throw error
+    }
+
+}
+
+// Update account api call
+
+export async function UpdateAccount(payload:LoginRequest): Promise<UpdateResponse> {
+    try{
+
+        const requestBody = {...payload}
+    
+        const res = await fetch(`${BaseUrl}/auth/login`, {
+            method: "PATCH",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(requestBody)
     })

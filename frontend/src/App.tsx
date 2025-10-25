@@ -10,6 +10,7 @@ import Playlist from "@/Dashboard/Playlist"
 import Subscriptions from "@/Dashboard/Subscriptions"
 import MovieDetailsPage from "./Dashboard/MovieDetailsPage"
 import { ProtectedRoute } from "./hooks/protectedRoute"
+import MoviesPageLayout from "./Dashboard/MoviesPageLayout"
 
 const App = () => {
   return (
@@ -25,7 +26,7 @@ const App = () => {
         {/* Protected Routes */}
           <Route path="/movie-app/*" element={<ProtectedRoute><NewLayout /></ProtectedRoute>}>
             <Route index element={<Navigate to="movies" replace />} />
-            <Route path=":category" element={<MoviesInfo />}/>
+            <Route path=":category" element={<MoviesPageLayout />}/>
             <Route path="live-streams" element={<LiveStreams />}/>
             <Route path="playlist" element={<Playlist />}/>
             <Route path="subscriptions" element={<Subscriptions />}/>

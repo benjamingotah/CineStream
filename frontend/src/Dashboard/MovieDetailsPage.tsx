@@ -4,15 +4,14 @@ import { getMovieDetails } from "@/hooks/Movies"
 import type { MoviesDetails } from "@/hooks/Movies"
 import MovieCard from "@/components/MovieCard"
 import { CirclePlay, LoaderCircle, Star } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import type { Movie } from "@/hooks/Movies"
 import { getSimilarMovies } from "@/hooks/Movies"
 import { Skeleton } from "@/components/ui/skeleton"
 
 
-
 const MovieDetailsPage = () => {
-
+ const topRef = useRef<HTMLDivElement | null>(null)
 const {id} = useParams<{id:string}>()
 const [details, setMovieDetails] = useState<MoviesDetails | undefined>(undefined)
 const [error, setError] = useState<string | null>(null)
@@ -56,6 +55,10 @@ useEffect(()=>{
     if(id) fetchSimilarMovies()
 },[id])
 
+ useEffect(() => {
+    topRef.current?.scrollIntoView({ behavior: "smooth" })
+  }, [id])
+
   if (error) {
     return <div className="min-h-full w-full flex items-center justify-center text-white">{error}</div>
   }
@@ -64,8 +67,11 @@ useEffect(()=>{
     return <div className="min-h-screen w-full flex items-center justify-center text-white"> <LoaderCircle className="animate-spin"/>Loading...</div>
   }
 
+
   return (
-    <motion.div className="min-h-screen w-full bg-[#030d1b]" 
+    <motion.div 
+    ref={topRef}
+    className="min-h-screen w-full bg-[#030d1b]" 
           initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }} >
@@ -121,7 +127,11 @@ useEffect(()=>{
   {/* Similar movies */}
   
   <div><h6 className="text-white mt-10 text-2xl p-4">Watch Similar Movies</h6></div>
-  <div className="grid grid-cols-2 ml-3 mt-5 p-1 md:grid-cols-4 md:p-5 scroll-auto snap-y">
+  
+  <div className="
+    flex flex-wrap justify-evenly
+     mt-5 p-2 md:p-5 
+    scroll-smooth  snap-mandatory">
    {similar.map(movie => (
   <MovieCard key={movie.id} movie={movie} />
 ))}

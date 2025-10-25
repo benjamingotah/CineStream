@@ -1,5 +1,5 @@
 import { Link, Outlet } from "react-router-dom";
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Separator } from '@/components/ui/separator';
 import {
   CreditCard,
@@ -26,11 +26,11 @@ import { UseAuth } from "@/hooks/useAuth";
 
 const NewLayout = () => {
 
-  const {user, logout, isAuthenticated} =UseAuth()
+  const {user, logout} =UseAuth()
   const isMobileOrTablet = useIsMobileOrTablet();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-if(isAuthenticated){}
+  const mainRef = useRef<HTMLDivElement | null>(null)
   const navItems = [
     { icon: TvMinimal, label: 'Movies', path: '/movie-app/movies' },
     { icon: Radio, label: 'Live Streams', path: '/movie-app/live-streams' },
@@ -182,7 +182,7 @@ if(isAuthenticated){}
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto pt-16 pb-6  lg:left-64">
+        <main  ref={mainRef}  className="flex-1 overflow-y-auto pt-16 pb-6  lg:left-64">
           <Outlet />
         </main>
       </div>
