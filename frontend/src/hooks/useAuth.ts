@@ -38,7 +38,7 @@ export const UseAuth = () =>{
             UserManager.setUser(response.user)
             tokenManager.setToken(response.token)
             return {
-                success: true, user: UserManager.getUser()
+                success: true, user: response.user
             }
 
         }catch(error){
@@ -47,6 +47,7 @@ export const UseAuth = () =>{
             setLoading(false)
         }
     }
+
 
     const logout = ()=>{
         UserManager.logout()

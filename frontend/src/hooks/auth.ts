@@ -24,6 +24,11 @@ export interface LoginResponse {
     user: User
 }
 
+export interface UpdateRequest{
+    fullName: string,
+    email: string
+}
+
 export interface UpdateResponse{
     message: string
 }
@@ -79,14 +84,20 @@ export async function LoginUser(payload:LoginRequest): Promise<LoginResponse> {
 
 // Update account api call
 
-export async function UpdateAccount(payload:LoginRequest): Promise<UpdateResponse> {
+export async function UpdateAccount(payload:UpdateRequest): Promise<UpdateResponse> {
+
+     const token = tokenManager.getToken();
+
+  if (!tokenManager.isTokenValid() || !token) {
+    throw new Error("401"); // Token invalid or missing
+  }
     try{
 
         const requestBody = {...payload}
     
-        const res = await fetch(`${BaseUrl}/auth/login`, {
+        const res = await fetch(`${BaseUrl}/auth/update-account`, {
             method: "PATCH",
-            headers: {"Content-Type": "application/json"},
+            headers: {"Content-Type": "application/json",  Authorization: `Bearer ${token}`,},
             body: JSON.stringify(requestBody)
     })
 
@@ -149,7 +160,7 @@ export const UserManager = {
         localStorage.setItem('authUser', JSON.stringify(user))
     },
 
-    removeUSer: (): void => {
+    removeUser: (): void => {
         localStorage.removeItem('authUser')
     },
 
@@ -163,7 +174,7 @@ export const UserManager = {
     },
 
     logout: () =>{
-        UserManager.removeUSer()
+        UserManager.removeUser()
         tokenManager.removeToken()
     }
 }

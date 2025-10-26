@@ -113,10 +113,12 @@ const NewLayout = () => {
             
             {/* User dropdown menu */}
             <div className="mt-2 space-y-1">
-              <button className="flex items-center space-x-2 w-full px-3 py-2 rounded-md hover:bg-gray-700 text-sm">
+             <Link to={'/movie-app/account'}  onClick={() => isMobileOrTablet && setSidebarOpen(false)}>
+              <button  className="flex items-center space-x-2 w-full px-3 py-2 rounded-md hover:bg-gray-700 text-sm">
                 <User2 className="h-4 w-4" />
                 <span>Account</span>
               </button>
+             </Link>
               <button className="flex items-center space-x-2 w-full px-3 py-2 rounded-md hover:bg-gray-700 text-sm">
                 <CreditCard className="h-4 w-4" />
                 <span>Billing</span>

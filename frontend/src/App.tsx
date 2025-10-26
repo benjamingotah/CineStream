@@ -4,13 +4,14 @@ import ErrorBoundary from "@/components/ErrorBoundary"
 import Login from "@/auth/Login"
 import SignUp from "@/auth/SignUp"
 import NewLayout from "@/Dashboard/NewLayout"
-import MoviesInfo from "@/Dashboard/MoviesInfo"
+
 import LiveStreams from "@/Dashboard/LiveStreams"
 import Playlist from "@/Dashboard/Playlist"
 import Subscriptions from "@/Dashboard/Subscriptions"
 import MovieDetailsPage from "./Dashboard/MovieDetailsPage"
 import { ProtectedRoute } from "./hooks/protectedRoute"
 import MoviesPageLayout from "./Dashboard/MoviesPageLayout"
+import Account from "./Dashboard/Account"
 
 const App = () => {
   return (
@@ -29,6 +30,7 @@ const App = () => {
             <Route path=":category" element={<MoviesPageLayout />}/>
             <Route path="live-streams" element={<LiveStreams />}/>
             <Route path="playlist" element={<Playlist />}/>
+            <Route path="account" element={<Account from={"top"} />}/>
             <Route path="subscriptions" element={<Subscriptions />}/>
             <Route path="movie/:id" element={<MovieDetailsPage />} />
           </Route>
