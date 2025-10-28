@@ -42,25 +42,37 @@ import {
   AvatarImage,
 } from '@/components/ui/avatar'
 import { useState } from 'react';
-import {UpdateAccount, type UpdateRequest } from '@/hooks/auth';
+import {ChangePassword, tokenManager, UpdateAccount, UserManager, type ChangePasswordRequest, type UpdateRequest } from '@/hooks/auth';
+import { useNavigate } from 'react-router-dom';
 
 
 
 export function Account({ from }: BaseAlertDialogDemoProps) {
 
     const {user, isAuthenticated} = UseAuth()
+    const navigate =useNavigate()
     const[update, setUpdate] =useState<UpdateRequest>({
       fullName: user?.fullName || "",
   email: user?.email || ""
+    }) 
+    const [changePassword, SetChangePassword] = useState<ChangePasswordRequest>({
+      oldPassword: "",
+      newPassword: ""
     })
     const [loading, setLoading]= useState(false)
     const [error, setError] = useState<string>()
     const [success, setSuccess] = useState<string>()
 
-   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+   const handleUpdateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUpdate({ ...update, [e.target.id]: e.target.value });
   };
 
+   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    SetChangePassword({ ...changePassword, [e.target.id]: e.target.value })
+  };
+
+
+  // Handles the Update account submit
   const handleUpdateAccount = async (e: React.FormEvent)=>{
     e.preventDefault()
 
@@ -85,6 +97,31 @@ export function Account({ from }: BaseAlertDialogDemoProps) {
   }
   }
 
+  // Handle Change password submit
+
+  const handleChangePasswordSubmit = async (e: React.FormEvent )=>{
+    e.preventDefault()
+
+    if(!isAuthenticated){
+      setError("You're not authenticated")
+    }
+
+    setLoading(true)
+
+    try{
+      const response = await ChangePassword(changePassword)
+      setSuccess("Password Changed Sucessful")
+      UserManager.removeUser()
+      tokenManager.removeToken()
+      navigate('/auth/login')
+
+
+    }catch(error){
+      setError('Invalid current password')
+    }finally{
+      setLoading(false)
+    }
+  }
 
   return (
 
@@ -136,13 +173,13 @@ export function Account({ from }: BaseAlertDialogDemoProps) {
               <CardContent className="grid gap-6">
                 <div className="grid gap-3">
                   <Label className='text-gray-100' htmlFor="fullName">Full Name</Label>
-                  <Input value={update.fullName} onChange={handleChange} className='text-sm h-11 font-light text-gray-200' id="fullName" placeholder={user?.fullName} />
+                  <Input value={update.fullName} onChange={handleUpdateChange} className='text-sm h-11 font-light text-gray-200' id="fullName" placeholder={user?.fullName} />
                 </div>
               </CardContent>
               <CardContent className="grid gap-6">
                 <div className="grid gap-3 ">
                   <Label className='text-gray-100' htmlFor="email">Email</Label>
-                  <Input onChange={handleChange} value={update.email} className='text-sm font-light h-11 text-gray-200' id="email" placeholder={user?.email} />
+                  <Input onChange={handleUpdateChange} value={update.email} className='text-sm font-light h-11 text-gray-200' id="email" placeholder={user?.email} />
                 </div>
 
                 {error && (
@@ -186,22 +223,40 @@ export function Account({ from }: BaseAlertDialogDemoProps) {
                   out.
                 </CardDescription>
               </CardHeader>
-              <form>
 
+
+              <form className='flex flex-col gap-6' onSubmit={handleChangePasswordSubmit}>
               <CardContent className="grid gap-6">
                 <div className="grid gap-3">
                   <Label className='text-gray-100' htmlFor="current password">Current password</Label>
-                  <Input className='text-xl font-light text-gray-200 h-11' id="current" type="password"
-                  placeholder='.......' />
+                  <Input className='text-xl font-light text-gray-200 h-11' id="oldPassword" value={changePassword.oldPassword} onChange={handlePasswordChange}  type="password"
+                  placeholder='••••••••' />
                 </div>
                 <div className="grid gap-3">
                   <Label className='text-gray-100' htmlFor="new-password">New password</Label>
-                  <Input className='text-xl font-light h-11 text-gray-200' id="password" type="password"
-                  placeholder='..........' />
+                  <Input className='text-xl font-light h-11 text-gray-200' id="newPassword" value={changePassword.newPassword} onChange={handlePasswordChange} type="password"
+                  placeholder='••••••••' />
                 </div>
               </CardContent>
+              {error && (
+                  <div className="rounded-md bg-red-500/20 p-3 ml-6 mr-6 border border-red-500/30">
+                    <p className="text-red-300 text-sm text-center">{error}</p>
+                  </div>
+                )}
+
+                
               <CardFooter>
-                <Button className='bg-orange-600 hover:bg-orange-600/90'>Save password</Button>
+                <Button type='submit' disabled={loading}
+                className='bg-orange-600 hover:bg-orange-600/90'>
+                {loading ? (
+                    <>
+                      <LoaderCircle className="h-5 w-5 animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    "Save Password"
+                  )}
+                </Button>
               </CardFooter>
               </form>
             </TabsContent>

@@ -33,6 +33,10 @@ export interface UpdateResponse{
     message: string
 }
 
+export interface ChangePasswordRequest {
+    oldPassword: string;
+    newPassword: string
+}
 
 const BaseUrl = import.meta.env.VITE_BASE_URL;
 
@@ -111,6 +115,39 @@ export async function UpdateAccount(payload:UpdateRequest): Promise<UpdateRespon
     }
 
 }
+
+// Change Password api call
+
+export async function ChangePassword(payload:ChangePasswordRequest){
+
+     const token = tokenManager.getToken();
+
+  if (!tokenManager.isTokenValid() || !token) {
+    throw new Error("401"); // Token invalid or missing
+  }
+    try{
+
+        const requestBody = {...payload}
+    
+        const res = await fetch(`${BaseUrl}/auth/change-password`, {
+            method: "POST",
+            headers: {"Content-Type": "application/json",  Authorization: `Bearer ${token}`,},
+            body: JSON.stringify(requestBody)
+    })
+
+    if(!res.ok) throw new Error(`${res.status}`)
+
+    const data = await res.json()
+    return data
+
+    }catch(error){
+        throw error
+    }
+
+}
+
+
+
 
 export const tokenManager = {
     getToken : (): string | null => {
