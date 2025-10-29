@@ -143,7 +143,34 @@ export async function ChangePassword(payload:ChangePasswordRequest){
     }catch(error){
         throw error
     }
+}
 
+
+// Delete Account api call
+
+export async function DeleteAccount(){
+
+     const token = tokenManager.getToken();
+
+  if (!tokenManager.isTokenValid() || !token) {
+    throw new Error("401");
+  }
+    try{
+
+    
+        const res = await fetch(`${BaseUrl}/auth`, {
+            method: "DELETE",
+            headers: {"Content-Type": "application/json",  Authorization: `Bearer ${token}`,},
+    })
+
+    if(!res.ok) throw new Error(`${res.status}`)
+
+    const data = await res.json()
+    return data
+
+    }catch(error){
+        throw error
+    }
 }
 
 

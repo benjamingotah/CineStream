@@ -42,7 +42,7 @@ import {
   AvatarImage,
 } from '@/components/ui/avatar'
 import { useState } from 'react';
-import {ChangePassword, tokenManager, UpdateAccount, UserManager, type ChangePasswordRequest, type UpdateRequest } from '@/hooks/auth';
+import {ChangePassword, DeleteAccount, tokenManager, UpdateAccount, UserManager, type ChangePasswordRequest, type UpdateRequest } from '@/hooks/auth';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -114,10 +114,28 @@ export function Account({ from }: BaseAlertDialogDemoProps) {
       UserManager.removeUser()
       tokenManager.removeToken()
       navigate('/auth/login')
+      console.log(response.status)
 
 
     }catch(error){
       setError('Invalid current password')
+    }finally{
+      setLoading(false)
+    }
+  }
+
+  // Handle Delete account
+  const handleDeleteAccount = async ()=>{
+    setLoading(true)
+    try{
+      const response = await DeleteAccount()
+      window.alert('Account Deleted')
+      navigate('/auth/signup')
+      tokenManager.removeToken()
+      UserManager.removeUser()
+    }catch(err){
+      throw err
+      setError('No auth header found')
     }finally{
       setLoading(false)
     }
@@ -288,8 +306,15 @@ export function Account({ from }: BaseAlertDialogDemoProps) {
             <AlertDialogClose className="bg-blue-900 rounded-sm text-white px-4 py-2 text-sm">
               Cancel
             </AlertDialogClose>
-            <AlertDialogClose className="bg-red-600 rounded-sm text-primary-foreground px-4 py-2 text-sm">
-              Delete
+            <AlertDialogClose onClick={handleDeleteAccount} disabled={loading} className="bg-red-600 rounded-sm text-primary-foreground px-4 py-2 text-sm">
+               {loading ? (
+                    <>
+                      <LoaderCircle className="h-5 w-5 animate-spin" />
+                      Deleting...
+                    </>
+                  ) : (
+                    "Delete"
+                  )}
             </AlertDialogClose>
           </AlertDialogFooter>
         </AlertDialogPopup>
