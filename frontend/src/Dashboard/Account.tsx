@@ -130,6 +130,7 @@ export function Account({ from }: BaseAlertDialogDemoProps) {
     try{
       const response = await DeleteAccount()
       window.alert('Account Deleted')
+      console.log(response.status)
       navigate('/auth/signup')
       tokenManager.removeToken()
       UserManager.removeUser()

@@ -71,7 +71,7 @@ useEffect(()=>{
   return (
     <motion.div 
     ref={topRef}
-    className="min-h-screen w-full bg-[#030d1b]" 
+    className=" w-full bg-[#030d1b]" 
           initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }} >
@@ -111,8 +111,8 @@ useEffect(()=>{
       <div className="flex flex-row gap-10 mt-8 p-4 md:mt-5 text-gray-200">
         <p className="text-white flex gap-2"><Star size={'20'} color="oklch(70.5% 0.213 47.604)"/>{details.rating}</p> |
 
-        <p className="text-gray-200 flex"><span className="hidden md:block">Year:  </span> {details.releaseYear}</p> |
-        <p className="text-gray-200 flex"><span className="hidden md:block">Duration: </span> {details.duration} mins</p>
+        <p className="text-gray-200 flex "><span className="hidden md:block mr-2">Year: </span> {details.releaseYear}</p> |
+        <p className="text-gray-200 flex"><span className="hidden md:block mr-2">Duration: </span> {details.duration} mins</p>
       </div>
 
       {/* Description */}

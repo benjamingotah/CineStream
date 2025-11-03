@@ -148,7 +148,7 @@ const NewLayout = () => {
             <Separator orientation="vertical" className="h-6 lg:hidden" />
             
             {/* search */}
-            <div className='flex justify-between items-center w-full'>
+            <div className='flex justify-between items-center w-full gap-2'>
               <SearchBar/>
               
               <div className="flex items-center gap-2 ml-auto">
